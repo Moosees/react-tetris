@@ -12,7 +12,7 @@ const Tetris = () => {
   const [gameOver, setGameOver] = useState(false);
 
   const [player, resetPlayer, updatePlayerPos] = usePlayer();
-  const [stage, setStage] = useStage(player);
+  const [stage, setStage] = useStage(player, resetPlayer);
 
   const startGame = () => {
     setStage(createStage());
@@ -54,7 +54,7 @@ const Tetris = () => {
             <Display text="Rows" />
             <Display text="Level" />
           </div>
-          <StartButton onClick={startGame} />
+          <StartButton callback={startGame} />
           {gameOver ? <Display gameOver text="Game Over!" /> : null}
         </aside>
       </StyledTetris>
