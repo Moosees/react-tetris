@@ -11,7 +11,7 @@ const Tetris = () => {
   const [dropTime, setDropTime] = useState(null);
   const [gameOver, setGameOver] = useState(false);
 
-  const [player, resetPlayer, updatePlayerPos] = usePlayer();
+  const [player, resetPlayer, updatePlayerPos, rotatePlayer] = usePlayer();
   const [stage, setStage] = useStage(player, resetPlayer);
 
   const startGame = () => {
@@ -51,12 +51,16 @@ const Tetris = () => {
         movePlayer(1);
       } else if (keyCode === 40) {
         dropPlayer();
+      } else if (keyCode === 88 || keyCode === 38) {
+        rotatePlayer(stage, 1);
+      } else if (keyCode === 90) {
+        rotatePlayer(stage, -1);
       }
     }
   };
 
-  console.log('Stage:', stage);
-  console.log('Player:', player);
+  // console.log('Stage:', stage);
+  // console.log('Player:', player);
   return (
     <StyledTetrisWrapper role="button" tabIndex={0} onKeyDown={e => move(e)}>
       <StyledTetris>
