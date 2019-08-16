@@ -99,9 +99,9 @@ const Tetris = () => {
         <Stage stage={stage} />
         <aside>
           <div>
-            <Display text="Score" />
-            <Display text="Rows" />
-            <Display text="Level" />
+            <Display text={`Score: ${score}`} />
+            <Display text={`Rows: ${rows}`} />
+            <Display text={`Level: ${level}`} />
           </div>
           <StartButton callback={startGame} />
           {gameOver ? <Display gameOver text="Game Over!" /> : null}
