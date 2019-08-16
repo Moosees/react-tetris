@@ -1,23 +1,32 @@
 import React, { useState } from 'react';
-import { createStage, checkCollition } from '../gameHelpers';
+import { checkCollition, createStage } from '../gameHelpers';
+import { useGameStatus } from '../hooks/useGameStatus';
+import { useInterval } from '../hooks/useInterval';
 import { usePlayer } from '../hooks/usePlayer';
 import { useStage } from '../hooks/useStage';
 import Display from './Display';
 import Stage from './Stage';
 import StartButton from './StartButton';
 import { StyledTetris, StyledTetrisWrapper } from './tetris.styles';
-import { useInterval } from '../hooks/useInterval';
 
 const Tetris = () => {
   const [dropTime, setDropTime] = useState(null);
   const [gameOver, setGameOver] = useState(false);
 
   const [player, resetPlayer, updatePlayerPos, rotatePlayer] = usePlayer();
-  const [stage, setStage] = useStage(player, resetPlayer);
+  const [stage, setStage, rowsCleared] = useStage(player, resetPlayer);
+  const [score, setScore, rows, setRows, level, setLevel] = useGameStatus(
+    rowsCleared
+  );
+
+  const LEVEL_UP_SPEED = 10;
 
   const startGame = () => {
     setStage(createStage());
     setGameOver(false);
+    setScore(0);
+    setRows(0);
+    setLevel(0);
     resetPlayer();
     setDropTime(1000);
   };
@@ -29,6 +38,11 @@ const Tetris = () => {
   };
 
   const drop = () => {
+    if (rows > (level + 1) * LEVEL_UP_SPEED) {
+      setLevel(prev => prev + 1);
+      setDropTime(level < 20 ? 1000 - level * 50 : 50);
+    }
+
     if (!checkCollition(player, stage, { x: 0, y: 1 })) {
       updatePlayerPos({ x: 0, y: 1, collided: false });
     } else {
@@ -44,7 +58,7 @@ const Tetris = () => {
   const keyUp = ({ keyCode }) => {
     if (!gameOver) {
       if (keyCode === 40) {
-        setDropTime(1000);
+        setDropTime(level < 20 ? 1000 - level * 50 : 50);
       }
     }
   };
@@ -74,8 +88,6 @@ const Tetris = () => {
     drop();
   }, dropTime);
 
-  // console.log('Stage:', stage);
-  // console.log('Player:', player);
   return (
     <StyledTetrisWrapper
       role="button"
