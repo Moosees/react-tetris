@@ -28,8 +28,6 @@ export const usePlayer = () => {
   const rotate = (matrix, dir) => {
     // transpose rows to cols
     const rotatedTetromino = matrix.map((_, i) => matrix.map(col => col[i]));
-    console.log('Normal', matrix);
-    console.log('Transposed', rotatedTetromino);
     // reverse if we rotated anti-clockwise
     if (dir > 0) {
       return rotatedTetromino.map(row => row.reverse());
